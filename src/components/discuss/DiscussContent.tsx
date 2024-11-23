@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import { Text } from '../common/Text';
 import {
   IconChatLeft,
+  IconChatLeftDisabled,
   IconChatRight,
   IconChatRightDisabled,
   IconCons,
@@ -56,7 +57,11 @@ export default function DiscussContent({
           className="relative cursor-pointer"
           onClick={() => setSelectedOption('pros')}
         >
-          <IconChatLeft />
+          {selectedOption === 'pros' ? (
+            <IconChatLeft />
+          ) : (
+            <IconChatLeftDisabled />
+          )}
           <div
             className={`absolute left-1/2 transform -translate-x-1/2 w-214pxr top-0 flex items-center flex-col gap-8pxr h-full justify-center`}
           >
@@ -109,7 +114,7 @@ export default function DiscussContent({
             fontWeight={800}
             color={`${selectedOption ? 'black' : 'f4f4f4'}`}
           >
-            선택완료
+            선택 완료
           </Text>
         </div>
       </div>

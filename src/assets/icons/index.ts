@@ -31,6 +31,7 @@ export { ReactComponent as IconPros } from './icon_pros.svg';
 export { ReactComponent as IconCons } from './icon_cons.svg';
 export { ReactComponent as IconMongleBoth } from './icon_mongle_both.svg';
 export { ReactComponent as IconChatRightDisabled } from './icon_chat_right_disabled.svg';
+export { ReactComponent as IconChatLeftDisabled } from './icon_chat_left_disabled.svg';
 export { ReactComponent as IconSharpLeft } from './icon_sharp_left.svg';
 export { ReactComponent as IconSharpRight } from './icon_sharp_right.svg';
 export { ReactComponent as IconMicBlack } from './icon_mic_black.svg';
