@@ -1,7 +1,7 @@
 import { IconSearch } from '@/assets/icons';
 import { useState } from 'react';
 import AllContents from '@/components/home/AllContents';
-import MyContents from '@/components/home/MyContents';
+import MyContents from '@/components/home/MyContent';
 import HomeContent from '@/components/home/HomeContent';
 
 export default function Home() {
