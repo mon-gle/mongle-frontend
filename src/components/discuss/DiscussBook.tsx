@@ -275,7 +275,7 @@ export default function DiscussBook({
               {savedTranscripts.map((text, index) => (
                 <div className="relative w-295pxr min-h-150pxr h-fit rounded-16pxr px-40pxr py-16pxr bg-white">
                   <div className="flex">
-                    <Text fontSize={20} fontWeight={800} color="48484A">
+                    <Text fontSize={16} fontWeight={400} color="48484A">
                       {text}
                       <div className="w-[3px] h-30pxr inline-block bg-[#FFDB00] shadow-[0px_4px_4px_rgba(0,0,0,0.25)]" />
                     </Text>
