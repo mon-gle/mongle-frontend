@@ -1,2 +1,10 @@
 export { ReactComponent as IconMainBottom } from './icon_main_bottom.svg';
 export { ReactComponent as IconMainLogo } from './icon_main_logo.svg';
+export { ReactComponent as IconSearch } from './icon_search.svg';
+export { ReactComponent as IconCloud } from './icon_cloud.svg';
+export { ReactComponent as IconPencil } from './icon_pencil.svg';
+export { ReactComponent as IconTutorial } from './icon_tutorial.svg';
+export { ReactComponent as IconText } from './icon_text.svg';
+export { ReactComponent as IconFeather } from './icon_feather.svg';
+export { ReactComponent as IconMongleBook } from './icon_mongle_book.svg';
+export { ReactComponent as IconPlus } from './icon_plus.svg';
