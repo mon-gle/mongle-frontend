@@ -140,7 +140,7 @@ export default function Story() {
           />
         ))}
       </section>
-      <section className="flex-grow flex justify-center mt-60pxr">
+      <section className="flex-grow flex justify-center mt-20pxr">
         <div className="relative flex h-fit">
           {/* 왼쪽 페이지 */}
           <div
@@ -163,21 +163,25 @@ export default function Story() {
                 이미지 생성 중...
               </Text>
             )}
-            <div
-              className="absolute left-0 bottom-0 cursor-pointer bg-[#FFF4DC] rounded-l-10pxr"
-              onClick={handlePreviousStep}
-            >
-              <IconLeftPage />
-            </div>
-            <div
-              className="absolute left-50pxr bottom-36pxr flex flex-col items-end cursor-pointer"
-              onClick={handlePreviousStep}
-            >
-              <Text fontSize={16} fontWeight={400} color="636366">
-                이전
-              </Text>
-              <IconLeftArrow />
-            </div>
+            {currentStep !== 1 && (
+              <div
+                className="absolute left-0 bottom-0 cursor-pointer bg-[#FFF4DC] rounded-l-10pxr"
+                onClick={handlePreviousStep}
+              >
+                <IconLeftPage />
+              </div>
+            )}
+            {currentStep !== 1 && (
+              <div
+                className="absolute left-50pxr bottom-36pxr flex flex-col items-end cursor-pointer"
+                onClick={handlePreviousStep}
+              >
+                <Text fontSize={16} fontWeight={400} color="636366">
+                  이전
+                </Text>
+                <IconLeftArrow />
+              </div>
+            )}
           </div>
           {/* 오른쪽 페이지 */}
           <div
