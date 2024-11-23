@@ -47,6 +47,7 @@ export default function HomeContent() {
                 key={index}
                 src={ImageBookSample}
                 title={`샘플 ${index + 1}`}
+                id={index + 1}
               />
             ))}
           </div>
