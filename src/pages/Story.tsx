@@ -1,7 +1,6 @@
 import { StoryHeader } from '@/components/story/StoryHeader';
 import { useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import storyData from '@/data/books/rnt.json';
 import { Text } from '@/components/common/Text';
 import {
   IconLeftArrow,
@@ -18,7 +17,10 @@ export default function Story() {
   const [images, setImages] = useState<{ [key: number]: string | null }>({});
   const [loading, setLoading] = useState(false);
   const [finished, setFinished] = useState(false);
-
+  const allStories = JSON.parse(localStorage.getItem('storyData') || '{}');
+  const storyData = allStories.stories.find(
+    (story: { id: string }) => story.id == id
+  );
   const fetchImage = async (title: string) => {
     const options = {
       method: 'POST',
@@ -65,21 +67,71 @@ export default function Story() {
     setCurrentStep(1);
     setFinished(false);
   };
+  const updateImageInLocalStorage = (
+    id: string,
+    step: number,
+    imgSrc: string
+  ) => {
+    // 1. localStorage에서 데이터 가져오기
+    const allStories = JSON.parse(localStorage.getItem('storyData') || '{}');
+
+    if (!allStories || !allStories.stories) {
+      console.error('No stories data found in localStorage.');
+      return;
+    }
+
+    // 2. 특정 ID의 스토리 찾기
+    const storyIndex = allStories.stories.findIndex(
+      (story: { id: string }) => story.id === id
+    );
+
+    if (storyIndex === -1) {
+      console.error(`Story with id ${id} not found.`);
+      return;
+    }
+
+    // 3. 해당 스토리의 content에서 이미지 업데이트
+    const story = allStories.stories[storyIndex];
+    if (!story.content || !story.content[step - 1]) {
+      console.error(`Content for step ${step} not found in story ${id}.`);
+      return;
+    }
+
+    story.content[step - 1].imgSrc = imgSrc;
+
+    // 4. 업데이트된 스토리를 다시 localStorage에 저장
+    allStories.stories[storyIndex] = story;
+    localStorage.setItem('storyData', JSON.stringify(allStories));
+  };
 
   useEffect(() => {
     const loadInitialImage = async () => {
       setLoading(true);
-      const firstTitle = storyData.content[0].title;
-      const firstImage = await fetchImage(firstTitle);
-      setImages((prev) => ({ ...prev, 1: firstImage }));
+      const imgSrc = storyData.content[0]?.imgSrc;
+      console.log(storyData.content[0]);
+      if (imgSrc) {
+        setImages((prev) => ({ ...prev, 1: imgSrc }));
+      } else {
+        const firstTitle = storyData.content[0].title;
+        const firstImage = await fetchImage(firstTitle);
+        setImages((prev) => ({ ...prev, 1: firstImage }));
+        updateImageInLocalStorage(id!, 1, firstImage!);
+      }
       setLoading(false);
 
       const prefetchRemainingImages = async () => {
         for (let i = 1; i < storyData.content.length; i++) {
           const stepIndex = i + 1;
-          const title = storyData.content[i].title;
-          const image = await fetchImage(title);
-          setImages((prev) => ({ ...prev, [stepIndex]: image }));
+          const imgSrc = storyData.content[i]?.imgSrc;
+          console.log(storyData.content[i]);
+          if (imgSrc) {
+            setImages((prev) => ({ ...prev, [stepIndex]: imgSrc }));
+          } else {
+            const title = storyData.content[i].title;
+            const image = await fetchImage(title);
+            setImages((prev) => ({ ...prev, [stepIndex]: image }));
+            updateImageInLocalStorage(id!, stepIndex, image!);
+          }
         }
       };
 
@@ -88,7 +140,6 @@ export default function Story() {
 
     loadInitialImage();
   }, []);
-
   return (
     <main className="w-full h-full flex flex-col relative">
       {loading && (
@@ -206,7 +257,7 @@ export default function Story() {
             <div className="flex flex-col gap-24pxr items-start justify-start w-full h-full text-center px-36pxr">
               {storyData.content[currentStep - 1].content
                 .split('\n')
-                .map((line, index) => (
+                .map((line: string, index: number) => (
                   <Text
                     key={index}
                     fontSize={20}

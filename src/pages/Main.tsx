@@ -1,16 +1,27 @@
 import { IconMainBottom, IconMainLogo } from '@/assets/icons';
 import { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import storyData from '@/data/books/rnt.json';
 
 export default function Main() {
   const navigate = useNavigate();
 
   useEffect(() => {
+    // storyData를 localStorage에 저장
+    const saveStoryDataToLocalStorage = () => {
+      localStorage.setItem('storyData', JSON.stringify(storyData));
+    };
+
+    saveStoryDataToLocalStorage();
+
+    // 1.5초 후에 /home으로 이동
     const timer = setTimeout(() => {
       navigate('/home');
     }, 1500);
+
     return () => clearTimeout(timer);
   }, [navigate]);
+
   return (
     <main className="flex h-full w-full items-center justify-center bg-yellow">
       <section className="relative flex flex-col gap-20pxr">
