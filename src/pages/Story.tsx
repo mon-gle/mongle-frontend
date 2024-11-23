@@ -180,7 +180,7 @@ export default function Story() {
           </div>
         </div>
       )}
-      <StoryHeader title="토끼와 거북이" />
+      <StoryHeader title={storyData.title} />
       <section className="w-full h-8pxr flex gap-5pxr relative">
         {Array.from({ length: storyData.content.length }, (_, index) => (
           <div

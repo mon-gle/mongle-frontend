@@ -8,6 +8,14 @@ import InProgressBookCard from './homeContents/InProgressBookCard';
 import AddBookCard from './homeContents/AddBookCard';
 
 export default function HomeContent() {
+  const images = import.meta.glob('@/assets/images/*', { eager: true });
+
+  const getImagePath = (filename: string): string => {
+    const key = `/src/assets/images/${filename}`;
+    return (images[key] as any)?.default || '';
+  };
+  const allStoriesData = JSON.parse(localStorage.getItem('storyData') || '[]');
+  const allstories = allStoriesData.stories;
   return (
     <main>
       <section className="flex justify-between pl-76pxr pr-46pxr w-full h-196pxr bg-yellow">
@@ -42,12 +50,12 @@ export default function HomeContent() {
             은우님을 위한 인기동화책!
           </Text>
           <div className="flex gap-20pxr pb-8pxr overflow-x-scroll">
-            {Array.from({ length: 10 }).map((_, index) => (
+            {allstories.map((story: any, index: number) => (
               <BookCard
                 key={index}
-                src={ImageBookSample}
-                title={`샘플 ${index + 1}`}
-                id={index + 1}
+                src={getImagePath(story.thumbnail)}
+                title={story.title}
+                id={story.id}
               />
             ))}
           </div>

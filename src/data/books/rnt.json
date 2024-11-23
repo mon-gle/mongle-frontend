@@ -3,7 +3,7 @@
     {
       "id": "1",
       "title": "토끼와 거북이",
-      "thumbnail": "https://example.com/thumbnails/turtle_rabbit_race.jpg",
+      "thumbnail": "image_book_sample.png",
       "summary": "토끼와 거북이가 벌이는 경주의 이야기를 통해 꾸준함의 가치를 알려주는 동화입니다.",
       "keywords": ["우화", "교훈", "동물", "경주"],
       "writter": "이솝",
@@ -31,7 +31,7 @@
     {
       "id": "2",
       "title": "개미와 베짱이",
-      "thumbnail": "https://example.com/thumbnails/ant_grasshopper.jpg",
+      "thumbnail": "image_book_sample.png",
       "summary": "개미와 베짱이의 대비되는 삶을 통해 근면함과 준비의 중요성을 다룬 이야기입니다.",
       "keywords": ["우화", "교훈", "근면", "준비"],
       "writter": "이솝",

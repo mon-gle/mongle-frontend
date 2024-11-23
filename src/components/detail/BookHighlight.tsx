@@ -7,6 +7,7 @@ interface BookHighlightProps {
 }
 
 export const BookHighlight = ({ src, title }: BookHighlightProps) => {
+  console.log(src);
   return (
     <section className="relative min-w-420pxr h-full rounded-[10px] flex flex-col items-center justify-center">
       <div

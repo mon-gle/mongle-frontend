@@ -6,6 +6,14 @@ import { SortOptions } from './allContents/SortOptions';
 import { BookCard } from './allContents/BookCards';
 
 export default function AllContents() {
+  const images = import.meta.glob('@/assets/images/*', { eager: true });
+
+  const getImagePath = (filename: string): string => {
+    const key = `/src/assets/images/${filename}`;
+    return (images[key] as any)?.default || '';
+  };
+  const allStoriesData = JSON.parse(localStorage.getItem('storyData') || '[]');
+  const allstories = allStoriesData.stories;
   const [selected, setSelected] = useState<string>('인기순');
   const [showButton, setShowButton] = useState<boolean>(false);
 
@@ -47,12 +55,12 @@ export default function AllContents() {
       />
       <div className="h-20pxr" />
       <section className="flex flex-wrap gap-16pxr">
-        {Array.from({ length: 40 }).map((_, index) => (
+        {allstories.map((story: any, index: number) => (
           <BookCard
             key={index}
-            src={ImageBookSample}
-            title={`곰의 행복 ${index + 1}`}
-            id={index + 1}
+            src={getImagePath(story.thumbnail)}
+            title={story.title}
+            id={story.id}
           />
         ))}
       </section>
