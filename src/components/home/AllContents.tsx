@@ -52,6 +52,7 @@ export default function AllContents() {
             key={index}
             src={ImageBookSample}
             title={`곰의 행복 ${index + 1}`}
+            id={index + 1}
           />
         ))}
       </section>

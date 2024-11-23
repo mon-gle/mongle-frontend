@@ -1,13 +1,25 @@
+import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Text } from '@/components/common/Text';
 
 interface BookCardProps {
   title: string;
   src: string;
+  id: number;
 }
 
-export const BookCard: React.FC<BookCardProps> = ({ title, src }) => {
+export const BookCard: React.FC<BookCardProps> = ({ title, src, id }) => {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    navigate(`/detail/${id}`);
+  };
+
   return (
-    <div className="flex flex-col gap-12pxr">
+    <div
+      className="flex flex-col gap-12pxr cursor-pointer"
+      onClick={handleClick}
+    >
       <img
         src={src}
         alt={title}
