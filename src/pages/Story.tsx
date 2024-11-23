@@ -32,7 +32,7 @@ export default function Story() {
       },
       body: JSON.stringify({
         prompt: title,
-        style: 'comic',
+        style: 'childrens_book',
         width: 512,
         height: 512,
         steps: 4,
