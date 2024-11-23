@@ -66,7 +66,7 @@ export default function HomeContent() {
         </section>
         <section className="flex flex-col gap-12pxr">
           <Text fontSize={24} fontWeight={800}>
-            은우님이 만든 동화책!
+            은우님이 참여한 독서 토론
           </Text>
           <div className="flex gap-20pxr pb-8pxr overflow-x-scroll">
             <InProgressBookCard src={ImageBookSample} />

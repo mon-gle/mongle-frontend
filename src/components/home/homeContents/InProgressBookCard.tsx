@@ -16,7 +16,7 @@ export default function InProgressBookCard({ src }: { src: any }) {
         <IconFeather />
         <div className="w-85pxr h-22pxr bg-black rounded-20pxr flex items-center justify-center">
           <Text fontSize={11} fontWeight={600} color="yellow">
-            만드는 중
+            참여 중
           </Text>
         </div>
       </div>

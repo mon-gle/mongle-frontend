@@ -35,8 +35,8 @@ export default function MyContent() {
             <IconHanger />
           </div>
           <div className="absolute top-0 left-44pxr">
-            <Text fontSize={15} fontWeight={800} color="2C2C2E">
-              내가 만든 결말
+            <Text fontSize={14} fontWeight={800} color="2C2C2E">
+              내가 참여한 토론
             </Text>
           </div>
           <div className="pl-29pxr flex gap-16pxr overflow-x-scroll pb-21pxr pr-10pxr">
@@ -52,7 +52,7 @@ export default function MyContent() {
               daysAgo="5일전"
               subtitle="엄마 몰래"
             />
-            <AddCard title="새 결말 만들기" />
+            <AddCard title="새 토론 참여하기" />
           </div>
         </section>
       </section>

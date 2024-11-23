@@ -12,7 +12,7 @@ export default function AddBookCard() {
         <IconMongleBook className="absolute right-0 bottom-0" />
       </div>
       <Text fontSize={14} fontWeight={800} color="AEAEB2">
-        새 동화 만들기
+        새 토론 참여하기
       </Text>
     </div>
   );
