@@ -1,8 +1,8 @@
 import { IconSearch } from '@/assets/icons';
 import { useState } from 'react';
-import HomeContents from '@/components/home/HomeContents';
 import AllContents from '@/components/home/AllContents';
 import MyContents from '@/components/home/MyContents';
+import HomeContent from '@/components/home/HomeContent';
 
 export default function Home() {
   const [activeTab, setActiveTab] = useState('홈');
@@ -46,7 +46,7 @@ export default function Home() {
        * 콘텐츠
        */}
       <section className="pt-76pxr">
-        {activeTab === '홈' && <HomeContents />}
+        {activeTab === '홈' && <HomeContent />}
         {activeTab === '모든책' && <AllContents />}
         {activeTab === '나의책장' && <MyContents />}
       </section>
