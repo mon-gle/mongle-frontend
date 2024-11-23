@@ -1,6 +1,5 @@
 import { useState, useEffect } from 'react';
 import { Text } from '../common/Text';
-import ImageBookSample from '@/assets/images/image_book_sample.png';
 import { ScrollToTopButton } from './allContents/ScrollToTopButton';
 import { SortOptions } from './allContents/SortOptions';
 import { BookCard } from './allContents/BookCards';

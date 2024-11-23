@@ -1,5 +1,5 @@
 import { Text } from '../common/Text';
-import ImageBookSample from '@/assets/images/image_book_sample.png';
+import ImageBookSample from '@/assets/images/rabbit1.png';
 import UserProfile from './homeContents/UserProfile';
 import { IconText } from '@/assets/icons';
 import ImageMongle from '@/assets/images/image_mongle.png';
@@ -8,12 +8,16 @@ import InProgressBookCard from './homeContents/InProgressBookCard';
 import AddBookCard from './homeContents/AddBookCard';
 
 export default function HomeContent() {
-  const images = import.meta.glob('@/assets/images/*', { eager: true });
+  const images = import.meta.glob('@/assets/images/*.{png,jpg,jpeg,webp}', {
+    eager: true,
+  });
 
   const getImagePath = (filename: string): string => {
     const key = `/src/assets/images/${filename}`;
+    console.log(key);
     return (images[key] as any)?.default || '';
   };
+
   const allStoriesData = JSON.parse(localStorage.getItem('storyData') || '[]');
   const allstories = allStoriesData.stories;
   return (

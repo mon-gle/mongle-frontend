@@ -2,7 +2,7 @@ import { Text } from '../common/Text';
 import { ReadingStats } from './myContents/ReadingStats';
 import { EndingCard } from './myContents/EndingCard';
 import { AddCard } from './myContents/AddCard';
-import ImageBookSample from '@/assets/images/image_book_sample.png';
+import ImageBookSample from '@/assets/images/rabbit1.png';
 import ImageTutorial from '@/assets/images/image_tutorial.png';
 import { IconHanger } from '@/assets/icons';
 import { SearchCard } from './myContents/SearchCard';
