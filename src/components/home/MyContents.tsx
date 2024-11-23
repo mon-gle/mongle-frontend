@@ -1,7 +1,6 @@
-import { useState, useEffect } from 'react';
 import { Text } from '../common/Text';
 import ImageBookSample from '@/assets/images/image_book_sample.png';
-import { IconHanger, IconMongleBook, IconPlus, IconUp } from '@/assets/icons';
+import { IconHanger, IconMongleBook, IconPlus } from '@/assets/icons';
 import ImageTutorial from '@/assets/images/image_tutorial.png';
 
 export default function MyContents() {
@@ -63,7 +62,7 @@ export default function MyContents() {
                   alt="샘플"
                   className="absolute top-0 left-0 w-full h-full object-cover"
                 />
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-13pxr flex flex-col items-center gap-5pxr bottom-0 z-[51]">
+                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-13pxr flex flex-col items-center gap-5pxr z-[51]">
                   <div className="rounded-[25px] flex items-center justify-center border-[0.6px] border-black bg-[rgba(255,255,255,0.8)] w-45pxr h-17pxr">
                     <Text fontSize={10} fontWeight={600}>
                       5일전
@@ -83,7 +82,7 @@ export default function MyContents() {
                   alt="샘플"
                   className="absolute top-0 left-0 w-full h-full object-cover"
                 />
-                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-13pxr flex flex-col items-center gap-5pxr bottom-0 z-[51]">
+                <div className="absolute left-1/2 transform -translate-x-1/2 bottom-13pxr flex flex-col items-center gap-5pxr z-[51]">
                   <div className="rounded-[25px] flex items-center justify-center border-[0.6px] border-black bg-[rgba(255,255,255,0.8)] w-45pxr h-17pxr">
                     <Text fontSize={10} fontWeight={600}>
                       5일전

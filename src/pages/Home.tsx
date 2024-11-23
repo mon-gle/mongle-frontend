@@ -1,16 +1,5 @@
-import {
-  IconCloud,
-  IconFeather,
-  IconMongleBook,
-  IconPencil,
-  IconPlus,
-  IconSearch,
-  IconText,
-} from '@/assets/icons';
-import { Text } from '@/components/common/Text';
+import { IconSearch } from '@/assets/icons';
 import { useState } from 'react';
-import ImageMongle from '@/assets/images/image_mongle.png';
-import ImageBookSample from '@/assets/images/image_book_sample.png';
 import HomeContents from '@/components/home/HomeContents';
 import AllContents from '@/components/home/AllContents';
 import MyContents from '@/components/home/MyContents';
