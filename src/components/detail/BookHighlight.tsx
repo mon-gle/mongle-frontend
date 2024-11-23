@@ -1,4 +1,5 @@
 import { Text } from '@/components/common/Text';
+import { BookActions } from './BookActions';
 
 interface BookHighlightProps {
   src: string;
@@ -25,6 +26,7 @@ export const BookHighlight = ({ src, title }: BookHighlightProps) => {
       <Text fontSize={24} fontWeight={800} color="1C1C1E" className="z-10">
         {title}
       </Text>
+      <BookActions />
     </section>
   );
 };
