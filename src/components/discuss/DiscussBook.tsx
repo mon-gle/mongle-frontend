@@ -207,7 +207,7 @@ export default function DiscussBook({
           </div>
         </div>
       )}
-      <section className="flex-grow flex justify-center mt-20pxr">
+      <section className="flex-grow flex justify-center mt-10pxr">
         <div className="relative flex h-fit">
           {/* 왼쪽 페이지 */}
           <div

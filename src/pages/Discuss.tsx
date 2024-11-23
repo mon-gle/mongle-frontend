@@ -106,7 +106,7 @@ export default function Discuss() {
         </div>
       )}
       {currentStep === 3 && (
-        <div className="flex-grow flex pt-20pxr justify-center">
+        <div className="flex-grow flex pt-10pxr justify-center">
           <DiscussBook
             userSelect={userSelect}
             title={storyData.title}
