@@ -1,5 +1,5 @@
 import { StoryHeader } from '@/components/story/StoryHeader';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { Text } from '@/components/common/Text';
 import {
@@ -12,6 +12,7 @@ import {
 } from '@/assets/icons';
 
 export default function Story() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
   const [currentStep, setCurrentStep] = useState(1);
   const [images, setImages] = useState<{ [key: number]: string | null }>({});
@@ -66,6 +67,34 @@ export default function Story() {
   const handleResetStep = () => {
     setCurrentStep(1);
     setFinished(false);
+  };
+  const handleExit = () => {
+    const allStories = JSON.parse(localStorage.getItem('storyData') || '{}');
+
+    if (!allStories || !allStories.stories) {
+      console.error('No stories data found in localStorage.');
+      return;
+    }
+
+    // 2. 특정 ID의 스토리 찾기
+    const storyIndex = allStories.stories.findIndex(
+      (story: { id: string }) => story.id === id
+    );
+
+    if (storyIndex === -1) {
+      console.error(`Story with id ${id} not found.`);
+      return;
+    }
+
+    // 3. 해당 스토리의 content에서 이미지 업데이트
+    const story = allStories.stories[storyIndex];
+
+    story.isRead = true;
+
+    // 4. 업데이트된 스토리를 다시 localStorage에 저장
+    allStories.stories[storyIndex] = story;
+    localStorage.setItem('storyData', JSON.stringify(allStories));
+    navigate(-1);
   };
   const updateImageInLocalStorage = (
     id: string,
@@ -172,7 +201,10 @@ export default function Story() {
                 다시 읽기
               </Text>
             </div>
-            <div className="w-full flex items-center justify-center cursor-pointer bg-yellow">
+            <div
+              className="w-full flex items-center justify-center cursor-pointer bg-yellow"
+              onClick={handleExit}
+            >
               <Text fontSize={28} fontWeight={800} color="1C1C1E">
                 종료
               </Text>
@@ -254,7 +286,7 @@ export default function Story() {
               {storyData.content[currentStep - 1].title}
             </Text>
             <div className="h-36pxr" />
-            <div className="flex flex-col gap-24pxr items-start justify-start w-full h-full text-center px-36pxr">
+            <div className="flex flex-col gap-24pxr items-start justify-start w-full h-full text-center px-36pxr overflow-y-scroll pb-80pxr">
               {storyData.content[currentStep - 1].content
                 .split('\n')
                 .map((line: string, index: number) => (

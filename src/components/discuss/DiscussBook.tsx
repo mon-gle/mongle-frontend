@@ -139,7 +139,7 @@ export default function DiscussBook({
 
       setMongle((prev) => [...prev, firstResponse]);
     };
-    getFirst();
+    // getFirst();
   }, []);
   useEffect(() => {
     if (savedTranscripts.length == 1) {
@@ -219,8 +219,8 @@ export default function DiscussBook({
               #FFF4DC`,
             }}
           >
-            <div className="w-full h-full px-36pxr pt-40pxr">
-              <div className="relative flex flex-col gap-50pxr">
+            <div className="w-full h-full px-36pxr pt-40pxr overflow-y-scroll">
+              <div className="relative flex flex-col gap-50pxr ">
                 {mongle.map((text, index) => (
                   <div>
                     <div className="flex gap-28pxr">
@@ -244,6 +244,7 @@ export default function DiscussBook({
                   </div>
                 ))}
               </div>
+              <div className="h-50pxr" />
             </div>
             <div
               className="absolute left-0 bottom-0 cursor-pointer bg-[#FFF4DC] rounded-l-10pxr"
@@ -273,7 +274,7 @@ export default function DiscussBook({
           >
             <div className="flex flex-col gap-50pxr px-42pxr mt-120pxr pt-30pxr overflow-y-scroll">
               {savedTranscripts.map((text, index) => (
-                <div className="relative w-295pxr min-h-150pxr h-fit rounded-16pxr px-40pxr py-16pxr bg-white">
+                <div className="relative w-295pxr h-fit rounded-16pxr px-40pxr py-16pxr bg-white">
                   <div className="flex">
                     <Text fontSize={16} fontWeight={400} color="48484A">
                       {text}

@@ -1,14 +1,25 @@
-import { IconBookWhite, IconBrainWhite, IconUnlock } from '@/assets/icons';
+import {
+  IconBookWhite,
+  IconBrainWhite,
+  IconLock,
+  IconUnlock,
+} from '@/assets/icons';
 import { Text } from '@/components/common/Text';
 import { useNavigate } from 'react-router-dom';
 
 export const BookActions = ({ id }: { id: string }) => {
+  const allStories = JSON.parse(localStorage.getItem('storyData') || '{}');
+  const storyIndex = allStories.stories.findIndex(
+    (story: { id: string }) => story.id === id
+  );
+  const story = allStories.stories[storyIndex];
+
   const navigate = useNavigate();
   const handleReadStory = () => {
     navigate(`/story/${id}`);
   };
   const handleDiscussStory = () => {
-    navigate(`/discuss/${id}`);
+    if (story.isRead) navigate(`/discuss/${id}`);
   };
   return (
     <div className="flex flex-col gap-16pxr z-10">
@@ -28,10 +39,10 @@ export const BookActions = ({ id }: { id: string }) => {
       </div>
       <div className="flex gap-10pxr items-center">
         <div className="w-46pxr h-46pxr border-4pxr border-1C1C1E rounded-full flex items-center justify-center">
-          <IconUnlock />
+          {story.isRead ? <IconUnlock /> : <IconLock />}
         </div>
         <div
-          className="w-244pxr h-60pxr flex gap-12pxr items-center pl-30pxr cursor-pointer rounded-10pxr bg-black"
+          className={`w-244pxr h-60pxr flex gap-12pxr items-center pl-30pxr rounded-10pxr bg-black ${!story.isRead ? 'opacity-40' : 'cursor-pointer'}`}
           onClick={handleDiscussStory}
         >
           <IconBrainWhite />
