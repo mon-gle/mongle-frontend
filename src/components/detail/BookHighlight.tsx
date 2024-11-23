@@ -4,10 +4,10 @@ import { BookActions } from './BookActions';
 interface BookHighlightProps {
   src: string;
   title: string;
+  id: string;
 }
 
-export const BookHighlight = ({ src, title }: BookHighlightProps) => {
-  console.log(src);
+export const BookHighlight = ({ src, title, id }: BookHighlightProps) => {
   return (
     <section className="relative min-w-420pxr h-full rounded-[10px] flex flex-col items-center justify-center">
       <div
@@ -27,7 +27,8 @@ export const BookHighlight = ({ src, title }: BookHighlightProps) => {
       <Text fontSize={24} fontWeight={800} color="1C1C1E" className="z-10">
         {title}
       </Text>
-      <BookActions />
+      <div className="h-36pxr" />
+      <BookActions id={id} />
     </section>
   );
 };

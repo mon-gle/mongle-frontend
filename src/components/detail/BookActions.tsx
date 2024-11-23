@@ -1,45 +1,44 @@
-import { IconBookBlack, IconBrainYellow } from '@/assets/icons';
+import { IconBookWhite, IconBrainWhite, IconUnlock } from '@/assets/icons';
 import { Text } from '@/components/common/Text';
 import { useNavigate } from 'react-router-dom';
 
-export const BookActions = () => {
+export const BookActions = ({ id }: { id: string }) => {
   const navigate = useNavigate();
   const handleReadStory = () => {
-    navigate('/story/1');
+    navigate(`/story/${id}`);
+  };
+  const handleDiscussStory = () => {
+    navigate(`/discuss/${id}`);
   };
   return (
-    <div className="flex gap-16pxr z-10">
-      <div
-        className="flex flex-col gap-10pxr cursor-pointer"
-        onClick={handleReadStory}
-      >
-        <div className="w-72pxr h-72pxr flex items-center justify-center bg-white rounded-full">
-          <IconBookBlack />
+    <div className="flex flex-col gap-16pxr z-10">
+      <div className="flex gap-10pxr items-center">
+        <div className="w-46pxr h-46pxr border-4pxr border-1C1C1E rounded-full flex items-center justify-center">
+          <IconUnlock />
         </div>
-        <Text
-          fontSize={24}
-          fontWeight={800}
-          color="1C1C1E"
-          className="text-center"
+        <div
+          className="w-244pxr h-60pxr flex gap-12pxr items-center pl-30pxr cursor-pointer rounded-10pxr bg-black"
+          onClick={handleReadStory}
         >
-          읽기
-        </Text>
-      </div>
-      <div className="flex flex-col gap-10pxr">
-        <div className="h-72pxr px-25pxr items-center rounded-full bg-black flex gap-4pxr">
-          <IconBrainYellow />
-          <Text fontSize={20} fontWeight={800} color="yellow">
-            토론하기
+          <IconBookWhite />
+          <Text fontSize={20} fontWeight={800} color="white">
+            기본 책읽기
           </Text>
         </div>
-        <Text
-          fontSize={24}
-          fontWeight={800}
-          color="1C1C1E"
-          className="text-center"
+      </div>
+      <div className="flex gap-10pxr items-center">
+        <div className="w-46pxr h-46pxr border-4pxr border-1C1C1E rounded-full flex items-center justify-center">
+          <IconUnlock />
+        </div>
+        <div
+          className="w-244pxr h-60pxr flex gap-12pxr items-center pl-30pxr cursor-pointer rounded-10pxr bg-black"
+          onClick={handleDiscussStory}
         >
-          토론하기
-        </Text>
+          <IconBrainWhite />
+          <Text fontSize={20} fontWeight={800} color="white">
+            AI와 토론하기
+          </Text>
+        </div>
       </div>
     </div>
   );

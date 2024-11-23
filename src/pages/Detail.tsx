@@ -38,6 +38,7 @@ export default function Detail() {
         <BookHighlight
           src={getImagePath(storyData.thumbnail)}
           title={storyData.title}
+          id={storyData.id}
         />
 
         {/* 책 상세 정보 */}
