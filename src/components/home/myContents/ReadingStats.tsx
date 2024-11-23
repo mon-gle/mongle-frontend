@@ -5,10 +5,7 @@ interface ReadingStatsProps {
   bookCount: number;
 }
 
-export const ReadingStats: React.FC<ReadingStatsProps> = ({
-  level,
-  bookCount,
-}) => {
+export const ReadingStats = ({ level, bookCount }: ReadingStatsProps) => {
   return (
     <div className="bg-black w-208pxr h-30pxr rounded-33pxr px-35pxr flex items-center justify-between relative z-50">
       <Text fontSize={15} fontWeight={800} color="yellow">

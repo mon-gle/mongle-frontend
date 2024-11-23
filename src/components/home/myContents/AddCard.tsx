@@ -5,7 +5,7 @@ interface AddCardProps {
   title: string;
 }
 
-export const AddCard: React.FC<AddCardProps> = ({ title }) => {
+export const AddCard = ({ title }: AddCardProps) => {
   return (
     <div
       className="min-w-118pxr h-172pxr flex flex-col justify-between items-center cursor-pointer py-10pxr px-5pxr rounded-[8.788px] border-[#F4F4F4]

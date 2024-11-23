@@ -6,11 +6,11 @@ interface SortOptionsProps {
   onSelect: (option: string) => void;
 }
 
-export const SortOptions: React.FC<SortOptionsProps> = ({
+export const SortOptions = ({
   options,
   selected,
   onSelect,
-}) => {
+}: SortOptionsProps) => {
   return (
     <section className="flex gap-4pxr">
       {options.map((option) => (

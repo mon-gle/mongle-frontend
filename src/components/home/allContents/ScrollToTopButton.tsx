@@ -5,10 +5,10 @@ interface ScrollToTopButtonProps {
   onClick: () => void;
 }
 
-export const ScrollToTopButton: React.FC<ScrollToTopButtonProps> = ({
+export const ScrollToTopButton = ({
   show,
   onClick,
-}) => {
+}: ScrollToTopButtonProps) => {
   if (!show) return null;
 
   return (

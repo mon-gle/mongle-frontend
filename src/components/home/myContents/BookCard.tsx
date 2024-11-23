@@ -7,12 +7,7 @@ interface BookCardProps {
   daysAgo?: string;
 }
 
-export const BookCard: React.FC<BookCardProps> = ({
-  src,
-  title,
-  subtitle,
-  daysAgo,
-}) => {
+export const BookCard = ({ src, title, subtitle, daysAgo }: BookCardProps) => {
   return (
     <div className="relative w-full h-full rounded-[8.788px] border border-[#F4F4F4] shadow-[5px_5px_5px_rgba(0,0,0,0.10)] overflow-hidden">
       {daysAgo && (

@@ -1,15 +1,19 @@
 import { IconBookBlack, IconBrainYellow, IconLeftBlue } from '@/assets/icons';
 import { Text } from '@/components/common/Text';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import ImageBookSample from '@/assets/images/image_book_sample.png';
 
 export default function Detail() {
+  const navigate = useNavigate();
   const { id } = useParams<{ id: string }>();
 
   return (
     <main className="w-full h-full flex flex-col">
       <section className="flex justify-between items-center px-12pxr py-8pxr">
-        <div className="flex w-89pxr h-44pxr gap-6pxr items-center cursor-pointer">
+        <div
+          className="flex w-89pxr h-44pxr gap-6pxr items-center cursor-pointer"
+          onClick={() => navigate(-1)}
+        >
           <IconLeftBlue />
           <Text fontSize={17} fontWeight={400} color="007AFF">
             뒤로가기

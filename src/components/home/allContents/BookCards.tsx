@@ -8,7 +8,7 @@ interface BookCardProps {
   id: number;
 }
 
-export const BookCard: React.FC<BookCardProps> = ({ title, src, id }) => {
+export const BookCard = ({ title, src, id }: BookCardProps) => {
   const navigate = useNavigate();
 
   const handleClick = () => {
