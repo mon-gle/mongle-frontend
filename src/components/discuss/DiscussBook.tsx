@@ -151,7 +151,6 @@ export default function DiscussBook({
       const discussionResult = await discussionResponse.json();
       const discussionContent = discussionResult.choices[0].message.content;
 
-      return discussionContent;
       const audioResponse = await fetch(babyMP3);
       const audioBlob = await audioResponse.blob();
 
@@ -177,6 +176,7 @@ export default function DiscussBook({
 
       const audioUrl = URL.createObjectURL(audioBlobResponse);
       setAudioUrl(audioUrl);
+      return discussionContent;
     } catch (error) {
       console.error('Error:', error);
     } finally {

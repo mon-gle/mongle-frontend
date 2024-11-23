@@ -42,20 +42,6 @@ export default function Discuss() {
     (story: { id: string }) => story.id === id
   );
   const sess_id = uuidv4();
-  // Web Speech API를 사용해 텍스트를 음성으로 변환
-  const speakText = (text: string) => {
-    // Web Speech API SpeechSynthesis 초기화
-    const utterance = new SpeechSynthesisUtterance(text);
-
-    // 음성 설정 (언어 및 속성)
-    utterance.lang = 'ko-KR'; // 한국어
-    utterance.pitch = 1; // 음 높이
-    utterance.rate = 1; // 발음 속도
-    utterance.volume = 1; // 볼륨
-
-    // 음성 합성 실행
-    speechSynthesis.speak(utterance);
-  };
   const fetchDiscussion = async (prompt: string) => {
     const options = {
       method: 'POST',
@@ -84,12 +70,7 @@ export default function Discuss() {
       );
       const result = await response.json();
 
-      const messageContent = result.choices[0].message.content;
-
-      // TTS 호출
-      speakText(messageContent);
-
-      return messageContent;
+      return result.choices[0].message.content;
     } catch (error) {
       console.error('Failed to fetch discussion data:', error);
     } finally {
