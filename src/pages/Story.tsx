@@ -142,7 +142,7 @@ export default function Story() {
         setImages((prev) => ({ ...prev, 1: imgSrc }));
       } else {
         const firstTitle = storyData.content[0].title;
-        const firstImage = await fetchImage(firstTitle);
+        const firstImage = await fetchImage(storyData.title + firstTitle);
         setImages((prev) => ({ ...prev, 1: firstImage }));
         updateImageInLocalStorage(id!, 1, firstImage!);
       }
