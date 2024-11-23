@@ -1,0 +1,34 @@
+{
+  "id": "chatcmpl-AWp1XjD2KdwEZRkDecwBLJrXG3DVn",
+  "object": "chat.completion",
+  "created": 1732385995,
+  "model": "helpy-pro",
+  "choices": [
+    {
+      "index": 0,
+      "message": {
+        "role": "assistant",
+        "content": "```json\n{\n  \"subject\": \"토끼가 거북이보다 더 빠른가요?\",\n  \"pros\": \"토끼는 정말 빠르니까요! 토끼는 달리기를 잘해서 거북이보다 빨라요.\",\n  \"cons\": \"거북이는 느리지만 열심히 뛰니까, 느린 것도 괜찮아요! 경주는 포기하지 않으면서 끝까지 하는 거예요.\"\n}\n```",
+        "refusal": null
+      },
+      "logprobs": null,
+      "finish_reason": "stop"
+    }
+  ],
+  "usage": {
+    "prompt_tokens": 646,
+    "completion_tokens": 95,
+    "total_tokens": 741,
+    "prompt_tokens_details": {
+      "cached_tokens": 0,
+      "audio_tokens": 0
+    },
+    "completion_tokens_details": {
+      "reasoning_tokens": 0,
+      "audio_tokens": 0,
+      "accepted_prediction_tokens": 0,
+      "rejected_prediction_tokens": 0
+    }
+  },
+  "system_fingerprint": "fp_0ba0d124f1"
+}
