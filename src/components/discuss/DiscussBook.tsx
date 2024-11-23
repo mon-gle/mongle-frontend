@@ -1,4 +1,5 @@
 import {
+  IconClock,
   IconCloud,
   IconLeftArrow,
   IconLeftPage,
@@ -11,6 +12,7 @@ import {
 } from '@/assets/icons';
 import { useEffect, useRef, useState } from 'react';
 import { Text } from '../common/Text';
+import babyMP3 from '@/assets/audio/baby.mp3';
 
 interface DiscussBookProps {
   userSelect: string;
@@ -18,6 +20,7 @@ interface DiscussBookProps {
   sess_id: string;
   handleNextStep: () => void;
   handlePreviousStep: () => void;
+  setUserAnswer: (s: string[]) => void;
 }
 export default function DiscussBook({
   userSelect,
@@ -25,6 +28,7 @@ export default function DiscussBook({
   sess_id,
   handleNextStep,
   handlePreviousStep,
+  setUserAnswer,
 }: DiscussBookProps) {
   const [mongle, setMongle] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
@@ -33,7 +37,8 @@ export default function DiscussBook({
   const [transcript, setTranscript] = useState('');
   const [savedTranscripts, setSavedTranscripts] = useState<string[]>([]);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-
+  const [audioUrl, setAudioUrl] = useState('');
+  const [timer, setTimer] = useState(80);
   useEffect(() => {
     // webkitSpeechRecognition을 window 객체에서 가져오도록 타입 선언
     const SpeechRecognition =
@@ -72,7 +77,21 @@ export default function DiscussBook({
       };
     }
   }, []);
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setTimer((prev) => {
+        if (prev > 0) {
+          return prev - 1;
+        } else {
+          clearInterval(interval);
+          handleNextStep();
+          return 0;
+        }
+      });
+    }, 1000);
 
+    return () => clearInterval(interval);
+  }, []);
   // 녹음 시작/중단
   const toggleRecording = () => {
     if (!recognitionRef.current) {
@@ -91,14 +110,20 @@ export default function DiscussBook({
     }
   };
   const handleRecordStart = () => {
+    handlePlayAudio();
     if (savedTranscripts.length == 2) {
+      setUserAnswer(savedTranscripts);
       handleNextStep();
       return;
     }
     setRecordStart(true);
   };
-  const fetchDiscussion = async (prompt: string) => {
-    const options = {
+  const fetchDiscussionAndPlayAudio = async (
+    prompt: string
+  ): Promise<string | void> => {
+    setLoading(true);
+
+    const optionsForDiscussion = {
       method: 'POST',
       headers: {
         accept: 'application/json',
@@ -107,7 +132,7 @@ export default function DiscussBook({
       },
       body: JSON.stringify({
         model: 'helpy-pro',
-        sess_id,
+        sess_id: sess_id,
         messages: [
           {
             role: 'user',
@@ -117,38 +142,72 @@ export default function DiscussBook({
       }),
     };
 
-    setLoading(true);
     try {
-      const response = await fetch(
+      // Fetch discussion content
+      const discussionResponse = await fetch(
         `${import.meta.env.VITE_API_HELPY}`,
-        options
+        optionsForDiscussion
       );
-      const result = await response.json();
-      return result.choices[0].message.content;
+      const discussionResult = await discussionResponse.json();
+      const discussionContent = discussionResult.choices[0].message.content;
+
+      return discussionContent;
+      const audioResponse = await fetch(babyMP3);
+      const audioBlob = await audioResponse.blob();
+
+      const form = new FormData();
+      form.append('text', discussionContent);
+      form.append('audio', audioBlob, 'baby.mp3');
+
+      const optionsForAudio = {
+        method: 'POST',
+        headers: {
+          accept: 'application/json',
+          authorization: `Bearer ${import.meta.env.VITE_API_TOKEN}`,
+        },
+        body: form,
+      };
+
+      const response = await fetch(
+        `${import.meta.env.VITE_API_SPEECH}`,
+        optionsForAudio
+      );
+
+      const audioBlobResponse = await response.blob();
+
+      const audioUrl = URL.createObjectURL(audioBlobResponse);
+      setAudioUrl(audioUrl);
     } catch (error) {
-      console.error('Failed to fetch discussion data:', error);
+      console.error('Error:', error);
     } finally {
       setLoading(false);
     }
   };
+
   useEffect(() => {
     const getFirst = async () => {
-      const firstResponse = await fetchDiscussion(
+      const firstResponse = await fetchDiscussionAndPlayAudio(
         `앞서 생성한 ${title} 토론 주제 기억하지? ${userSelect} 의견에 반대되는 / 반박하는 의견을 주장해줘. 6세와 토론하고 있으니 논리적이지만 이해할 수 있는 문장 구사를 해줘. 2문장 이내로 짧고 조리있게 답변해줘. 상대를 존중하는 태도를 보였으면 좋겠어. 반말로 해줘..`
       );
-
-      setMongle((prev) => [...prev, firstResponse]);
+      if (firstResponse) setMongle((prev) => [...prev, firstResponse]);
     };
-    // getFirst();
+    getFirst();
   }, []);
+  const handlePlayAudio = () => {
+    const audio = new Audio(audioUrl);
+    audio.play().catch((error) => {
+      console.error('Playback failed:', error);
+    });
+  };
+
   useEffect(() => {
     if (savedTranscripts.length == 1) {
       const fetchResponse = async () => {
         const latestTranscript = savedTranscripts[savedTranscripts.length - 1];
-        const response = await fetchDiscussion(
+        const response = await fetchDiscussionAndPlayAudio(
           `방금 네가  ${title} 를 주제로 한 토론에 대해 친구가 반박을 했어. ${latestTranscript} 라고 하는데? 이거에 대해서도 반박해줘. 6세 아이에게 이야기하는 말투로 반말을 사용해. 답변은 2문장 이내로 짧지만 조리있게 주장해줘. 이전에 했던 주장이랑은 다른 근거를 분석적이고 비판적으로 제시해주어야해.`
         );
-        setMongle((prev) => [...prev, response]);
+        if (response) setMongle((prev) => [...prev, response]);
       };
       fetchResponse();
     }
@@ -221,7 +280,7 @@ export default function DiscussBook({
           >
             <div className="w-full h-full px-36pxr pt-40pxr overflow-y-scroll">
               <div className="relative flex flex-col gap-50pxr ">
-                {mongle.map((text, index) => (
+                {mongle.map((text, _) => (
                   <div>
                     <div className="flex gap-28pxr">
                       <div className="relative bg-black flex items-center justify-center rounded-full w-75pxr h-75pxr border-2pxr border-f4f4f4">
@@ -272,8 +331,18 @@ export default function DiscussBook({
               #FFF4DC`,
             }}
           >
+            <div className="absolute top-20pxr right-20pxr flex items-center justify-center">
+              <IconClock />
+            </div>
+            <Text
+              fontSize={18}
+              fontWeight={800}
+              className="absolute top-50pxr right-48pxr"
+            >
+              {timer}
+            </Text>
             <div className="flex flex-col gap-50pxr px-42pxr mt-120pxr pt-30pxr overflow-y-scroll">
-              {savedTranscripts.map((text, index) => (
+              {savedTranscripts.map((text, _) => (
                 <div className="relative w-295pxr h-fit rounded-16pxr px-40pxr py-16pxr bg-white">
                   <div className="flex">
                     <Text fontSize={16} fontWeight={400} color="48484A">

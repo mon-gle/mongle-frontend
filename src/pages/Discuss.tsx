@@ -1,25 +1,41 @@
+import { Text } from '@/components/common/Text';
 import DiscussBook from '@/components/discuss/DiscussBook';
 import DiscussContent from '@/components/discuss/DiscussContent';
 import { DiscussHeader } from '@/components/discuss/DiscussHeader';
 import DiscussIntro from '@/components/discuss/DiscussIntro';
 import { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { v4 as uuidv4 } from 'uuid';
+import ImageClock from '@/assets/images/image_clock.png';
+import {
+  IconMongleBig,
+  IconRefresh,
+  IconReward,
+  IconSharpRight,
+} from '@/assets/icons';
 
 export default function Discuss() {
+  const navigate = useNavigate();
   const [currentStep, setCurrentStep] = useState(1);
   const [discussionData, setDiscussionData] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [userSelect, setUserSelect] = useState<string>('');
-
+  const [userAnswer, setUserAnswer] = useState<string[]>([]);
+  const [userFeedBack, serUserFeedBack] = useState<string>('');
   const handleNextStep = () => {
-    setCurrentStep((prev) => Math.min(prev + 1, 7));
+    setCurrentStep((prev) => Math.min(prev + 1, 6));
   };
 
   const handlePreviousStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
 
+  const handleResetStep = () => {
+    setCurrentStep(1);
+  };
+  const handleExit = () => {
+    navigate('/home');
+  };
   const { id } = useParams<{ id: string }>();
   const allStories = JSON.parse(localStorage.getItem('storyData') || '[]');
   const storyData = allStories.stories.find(
@@ -70,6 +86,15 @@ export default function Discuss() {
     getFirst();
   }, []);
 
+  useEffect(() => {
+    const getUserFinal = async () => {
+      const response = await fetchDiscussion(
+        `앞선 토론에 대해서 친구가 말한 내용에 대해 칭찬해줘. 논리, 설득력, 어휘 등 구체적으로 칭찬해줘. 6세 아이가 이해할 수 있는 짧고 간결한 문장이면 좋아. 반말로 작성해줘,`
+      );
+      serUserFeedBack(response);
+    };
+    getUserFinal();
+  }, [userAnswer]);
   const handleSelect = async (selectOption: string) => {
     setUserSelect(selectOption);
     handleNextStep();
@@ -78,7 +103,7 @@ export default function Discuss() {
     <main className="w-full h-full flex flex-col">
       <DiscussHeader title={storyData.title} />
       <section className="w-full h-8pxr flex gap-5pxr relative">
-        {Array.from({ length: 7 }, (_, index) => (
+        {Array.from({ length: 6 }, (_, index) => (
           <div
             key={index}
             className={`w-full h-full ${
@@ -87,8 +112,8 @@ export default function Discuss() {
           />
         ))}
       </section>
-      {loading && currentStep === 2 && (
-        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
+      {loading && (currentStep === 2 || currentStep === 5) && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
           <div className="text-center">
             <p className="text-white text-xl font-bold">Loading...</p>
           </div>
@@ -113,7 +138,101 @@ export default function Discuss() {
             sess_id={sess_id}
             handleNextStep={handleNextStep}
             handlePreviousStep={handlePreviousStep}
+            setUserAnswer={setUserAnswer}
           />
+        </div>
+      )}
+      {currentStep === 4 && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col items-center gap-16pxr justify-center z-50">
+          <div className="flex flex-col text-center">
+            <Text fontSize={50} fontWeight={800} color="white">
+              TIME OVER
+            </Text>
+            <Text fontSize={20} fontWeight={400} color="white">
+              토론 시간이 모두 끝났어요
+            </Text>
+          </div>
+          <img src={ImageClock} alt="시계" />
+          <div className="fixed bottom-0 z-50 w-full h-68pxr bg-white flex">
+            <div
+              className={`w-full flex items-center justify-center cursor-pointer
+            bg-yellow
+          `}
+              onClick={handleNextStep}
+            >
+              <Text fontSize={28} fontWeight={800}>
+                다음
+              </Text>
+            </div>
+          </div>
+        </div>
+      )}
+      {currentStep === 5 && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex flex-col pt-200pxr items-center gap-16pxr z-50">
+          <div className="relative w-724pxr bg-white rounded-16pxr pt-26pxr px-40pxr pb-50pxr flex flex-col gap-24pxr">
+            {userAnswer.map((answer, _) => (
+              <Text fontSize={20} fontWeight={800} color="48484A">
+                {answer}
+              </Text>
+            ))}
+            <IconSharpRight className="absolute -right-20pxr top-0" />
+            <div className="absolute -top-5pxr -right-100pxr flex items-center justify-center bg-white rounded-full w-72pxr h-72pxr">
+              <Text fontSize={32} fontWeight={800}>
+                나
+              </Text>
+            </div>
+            <div className="flex absolute -bottom-200pxr -left-150pxr items-center z-50">
+              <IconMongleBig className="min-w-400pxr" />
+              <Text fontSize={24} fontWeight={800} color="white">
+                <br />
+                {userFeedBack}
+              </Text>
+            </div>
+          </div>
+          <div className="fixed bottom-0 z-50 w-full h-68pxr bg-white flex">
+            <div
+              className={`w-full flex items-center justify-center cursor-pointer
+            bg-yellow
+          `}
+              onClick={handleNextStep}
+            >
+              <Text fontSize={28} fontWeight={800}>
+                확인했어
+              </Text>
+            </div>
+          </div>
+        </div>
+      )}
+      {currentStep === 6 && (
+        <div className="absolute w-full h-full inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 backdrop-blur-sm">
+          <div className="text-center flex flex-col">
+            <Text fontSize={28} fontWeight={800} color="white">
+              독서 완료 보상
+            </Text>
+            <Text fontSize={60} fontWeight={800} color="yellow">
+              +200p
+            </Text>
+            <IconReward />
+          </div>
+          <div className="fixed bottom-0 z-50 w-full h-68pxr bg-white flex">
+            <div
+              className="w-full flex items-center gap-8pxr justify-center cursor-pointer bg-AEAEB2"
+              onClick={handleResetStep}
+            >
+              <IconRefresh />
+              <Text fontSize={28} fontWeight={800} color="white">
+                토론 다시하기
+              </Text>
+            </div>
+            <div
+              className="w-full flex items-center justify-center cursor-pointer bg-yellow"
+              onClick={handleExit}
+            >
+              <Text fontSize={28} fontWeight={800} color="1C1C1E">
+                토론 종료
+              </Text>
+            </div>
+          </div>
         </div>
       )}
     </main>

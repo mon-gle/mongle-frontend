@@ -36,3 +36,5 @@ export { ReactComponent as IconSharpLeft } from './icon_sharp_left.svg';
 export { ReactComponent as IconSharpRight } from './icon_sharp_right.svg';
 export { ReactComponent as IconMicBlack } from './icon_mic_black.svg';
 export { ReactComponent as IconMongleTrans } from './icon_mongle_trans.svg';
+export { ReactComponent as IconClock } from './icon_clock.svg';
+export { ReactComponent as IconMongleBig } from './icon_mongle_big.svg';

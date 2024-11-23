@@ -43,6 +43,7 @@ const fontSizeClasses: { [index: number]: string } = {
   28: 'text-28pxr',
   30: 'text-30pxr',
   32: 'text-32pxr',
+  50: 'text-50pxr',
   60: 'text-60pxr',
 };
 
