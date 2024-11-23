@@ -1,0 +1,43 @@
+@import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Hakgyoansim';
+  src: url('assets/fonts/Hakgyoansim Dunggeunmiso OTF B.otf') format('opentype');
+  font-weight: bold;
+  font-style: normal;
+}
+
+@font-face {
+  font-family: 'Hakgyoansim';
+  src: url('assets/fonts/Hakgyoansim Dunggeunmiso OTF R.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+html,
+#root {
+  width: 100dvw;
+  height: 100dvh;
+}
+
+body {
+  font-family: 'Hakgyoansim', sans-serif;
+  width: 100%;
+  height: 100%;
+}
+
+#root,
+body,
+html {
+  margin: 0 auto;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+::-webkit-scrollbar {
+  display: none; /* 크롬, 사파리, 오페라, 엣지 스크롤바 숨김 */
+}
