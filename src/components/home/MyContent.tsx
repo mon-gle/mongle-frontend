@@ -1,10 +1,12 @@
 import { Text } from '../common/Text';
 import { ReadingStats } from './myContents/ReadingStats';
-import { BookCard } from './myContents/BookCard';
+import { EndingCard } from './myContents/EndingCard';
 import { AddCard } from './myContents/AddCard';
 import ImageBookSample from '@/assets/images/image_book_sample.png';
 import ImageTutorial from '@/assets/images/image_tutorial.png';
 import { IconHanger } from '@/assets/icons';
+import { SearchCard } from './myContents/SearchCard';
+import BookCard from './myContents/BookCard';
 
 export default function MyContent() {
   return (
@@ -18,7 +20,7 @@ export default function MyContent() {
       <div className="h-36pxr" />
       <section className="flex gap-20pxr">
         <section className="relative flex flex-col gap-11pxr items-center pt-26pxr px-24pxr w-256pxr h-192pxr bg-yellow rounded-8pxr">
-          <Text fontSize={16} fontWeight={800} color="1C1C1E">
+          <Text fontSize={16} fontWeight={800} color="1C1C1E" className="z-50">
             지금까지 몽글님이 읽은 책!
           </Text>
           <ReadingStats level="level 5" bookCount={20} />
@@ -38,13 +40,13 @@ export default function MyContent() {
             </Text>
           </div>
           <div className="pl-29pxr flex gap-16pxr overflow-x-scroll pb-21pxr pr-10pxr">
-            <BookCard
+            <EndingCard
               src={ImageBookSample}
               title="엄마 몰래"
               daysAgo="5일전"
               subtitle="엄마 몰래"
             />
-            <BookCard
+            <EndingCard
               src={ImageBookSample}
               title="엄마 몰래"
               daysAgo="5일전"
@@ -67,7 +69,7 @@ export default function MyContent() {
             title={`곰의 행복 ${index + 1}`}
           />
         ))}
-        <AddCard title="다른동화 둘러보기" />
+        <SearchCard title="다른동화 둘러보기" />
       </section>
       <div className="h-20pxr" />
     </main>

@@ -1,14 +1,14 @@
 import { IconPlus, IconMongleBook } from '@/assets/icons';
 import { Text } from '@/components/common/Text';
 
-interface AddCardProps {
+interface SearchCardProps {
   title: string;
 }
 
-export const AddCard = ({ title }: AddCardProps) => {
+export const SearchCard = ({ title }: SearchCardProps) => {
   return (
     <div
-      className="min-w-132pxr h-132pxr flex flex-col justify-between items-center cursor-pointer py-10pxr px-5pxr rounded-[8.788px] border-[#F4F4F4]
+      className="min-w-118pxr h-172pxr flex flex-col justify-between items-center cursor-pointer py-10pxr px-5pxr rounded-[8.788px] border-[#F4F4F4]
       shadow-[5px_5px_5px_rgba(0,0,0,0.15)]"
     >
       <div className="relative flex justify-center items-center w-108pxr h-109pxr bg-f4f4f4 rounded-6pxr">
