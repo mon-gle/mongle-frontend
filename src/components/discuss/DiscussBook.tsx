@@ -26,7 +26,7 @@ export default function DiscussBook({
   handleNextStep,
   handlePreviousStep,
 }: DiscussBookProps) {
-  const [mongle, setMongle] = useState('');
+  const [mongle, setMongle] = useState<string[]>([]);
   const [loading, setLoading] = useState(false);
   const [recordStart, setRecordStart] = useState(false);
   const [listening, setListening] = useState(false);
@@ -34,62 +34,69 @@ export default function DiscussBook({
   const [savedTranscripts, setSavedTranscripts] = useState<string[]>([]);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
 
-  // Web Speech API 초기화
-  const initRecognition = () => {
+  useEffect(() => {
+    // webkitSpeechRecognition을 window 객체에서 가져오도록 타입 선언
     const SpeechRecognition =
-      window.SpeechRecognition || (window as any).webkitSpeechRecognition;
+      (window as any).SpeechRecognition ||
+      (window as any).webkitSpeechRecognition;
 
     if (!SpeechRecognition) {
       alert('이 브라우저는 음성 인식을 지원하지 않습니다.');
-      return null;
+      return;
     }
 
-    const recognition = new SpeechRecognition();
-    recognition.lang = 'ko-KR';
-    recognition.interimResults = true;
-    recognition.continuous = true;
+    // webkitSpeechRecognition 초기화
+    if ('webkitSpeechRecognition' in window) {
+      const recognition = new SpeechRecognition(); // window.webkitSpeechRecognition 대신 사용
+      recognition.lang = 'ko-KR';
+      recognition.interimResults = true;
+      recognition.continuous = true;
 
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-      const transcriptArray = Array.from(event.results)
-        .map((result) => result[0].transcript)
-        .join('');
-      setTranscript(transcriptArray);
-    };
+      // recognition을 ref에 저장
+      recognitionRef.current = recognition;
+      recognitionRef.current!.onresult = (event: SpeechRecognitionEvent) => {
+        const transcriptArray = Array.from(event.results)
+          .map((result) => result[0].transcript)
+          .join('');
+        setTranscript(transcriptArray);
+      };
 
-    recognition.onerror = (event) => {
-      console.error('SpeechRecognition Error:', event.error);
-    };
+      recognitionRef.current!.onerror = (event: any) => {
+        console.error('SpeechRecognition Error:', event.error);
+      };
 
-    recognition.onend = () => {
-      if (listening) {
-        recognition.start();
-      }
-    };
-
-    return recognition;
-  };
+      recognitionRef.current!.onend = () => {
+        if (listening) {
+          recognitionRef.current!.start();
+        }
+      };
+    }
+  }, []);
 
   // 녹음 시작/중단
   const toggleRecording = () => {
-    if (!recognitionRef.current) {
-      recognitionRef.current = initRecognition();
-    }
-
     if (!recognitionRef.current) {
       return;
     }
 
     if (listening) {
       recognitionRef.current.stop();
-      setSavedTranscripts((prev) => [...prev, transcript]);
+      if (transcript) setSavedTranscripts((prev) => [...prev, transcript]);
       setTranscript('');
       setListening(false);
+      setRecordStart(false);
     } else {
       recognitionRef.current.start();
       setListening(true);
     }
   };
-
+  const handleRecordStart = () => {
+    if (savedTranscripts.length == 2) {
+      handleNextStep();
+      return;
+    }
+    setRecordStart(true);
+  };
   const fetchDiscussion = async (prompt: string) => {
     const options = {
       method: 'POST',
@@ -129,10 +136,23 @@ export default function DiscussBook({
       const firstResponse = await fetchDiscussion(
         `앞서 생성한 ${title} 토론 주제 기억하지? ${userSelect} 의견에 반대되는 / 반박하는 의견을 주장해줘. 6세와 토론하고 있으니 논리적이지만 이해할 수 있는 문장 구사를 해줘. 2문장 이내로 짧고 조리있게 답변해줘. 상대를 존중하는 태도를 보였으면 좋겠어. 반말로 해줘..`
       );
-      setMongle(firstResponse);
+
+      setMongle((prev) => [...prev, firstResponse]);
     };
     getFirst();
   }, []);
+  useEffect(() => {
+    if (savedTranscripts.length == 1) {
+      const fetchResponse = async () => {
+        const latestTranscript = savedTranscripts[savedTranscripts.length - 1];
+        const response = await fetchDiscussion(
+          `방금 네가  ${title} 를 주제로 한 토론에 대해 친구가 반박을 했어. ${latestTranscript} 라고 하는데? 이거에 대해서도 반박해줘. 6세 아이에게 이야기하는 말투로 반말을 사용해. 답변은 2문장 이내로 짧지만 조리있게 주장해줘. 이전에 했던 주장이랑은 다른 근거를 분석적이고 비판적으로 제시해주어야해.`
+        );
+        setMongle((prev) => [...prev, response]);
+      };
+      fetchResponse();
+    }
+  }, [savedTranscripts]);
   return (
     <main>
       {loading && (
@@ -173,11 +193,17 @@ export default function DiscussBook({
                 </div>
               </div>
             )}
+            <div className="relative flex items-center justify-center">
+              {listening && (
+                <div className="absolute w-20 h-20 z-[5] rounded-full bg-white/60 animate-scale-pulse"></div>
+              )}
 
-            <IconMicBlack
-              className="cursor-pointer"
-              onClick={toggleRecording}
-            />
+              {/* Microphone Icon */}
+              <IconMicBlack
+                className="cursor-pointer z-10 relative"
+                onClick={toggleRecording}
+              />
+            </div>
           </div>
         </div>
       )}
@@ -194,25 +220,29 @@ export default function DiscussBook({
             }}
           >
             <div className="w-full h-full px-36pxr pt-40pxr">
-              <div className="relative">
-                <div className="flex gap-28pxr">
-                  <div className="relative bg-black flex items-center justify-center rounded-full w-75pxr h-75pxr border-2pxr border-f4f4f4">
-                    <IconCloud />
+              <div className="relative flex flex-col gap-50pxr">
+                {mongle.map((text, index) => (
+                  <div>
+                    <div className="flex gap-28pxr">
+                      <div className="relative bg-black flex items-center justify-center rounded-full w-75pxr h-75pxr border-2pxr border-f4f4f4">
+                        <IconCloud />
+                      </div>
+                      <div className="w-296pxr h-fit min-h-100pxr bg-black rounded-16pxr px-30pxr py-18pxr">
+                        <Text
+                          fontSize={16}
+                          fontWeight={400}
+                          color="white"
+                          className="break-keep"
+                        >
+                          {text}
+                        </Text>
+                      </div>
+                    </div>
+                    <div className="absolute top-40pxr left-80pxr">
+                      <IconSharpLeft />
+                    </div>
                   </div>
-                  <div className="w-296pxr h-fit min-h-100pxr bg-black rounded-16pxr px-30pxr py-18pxr">
-                    <Text
-                      fontSize={16}
-                      fontWeight={400}
-                      color="white"
-                      className="break-keep"
-                    >
-                      {mongle}
-                    </Text>
-                  </div>
-                </div>
-                <div className="absolute top-40pxr left-80pxr">
-                  <IconSharpLeft />
-                </div>
+                ))}
               </div>
             </div>
             <div
@@ -241,16 +271,31 @@ export default function DiscussBook({
               #FFF4DC`,
             }}
           >
-            <div className="h-36pxr" />
-            <div
-              className="absolute right-0 bottom-0 cursor-pointer bg-[#FFF4DC] rounded-r-10pxr"
-              onClick={handleNextStep}
-            >
+            <div className="flex flex-col gap-50pxr px-42pxr mt-120pxr pt-30pxr overflow-y-scroll">
+              {savedTranscripts.map((text, index) => (
+                <div className="relative w-295pxr min-h-150pxr h-fit rounded-16pxr px-40pxr py-16pxr bg-white">
+                  <div className="flex">
+                    <Text fontSize={20} fontWeight={800} color="48484A">
+                      {text}
+                      <div className="w-[3px] h-30pxr inline-block bg-[#FFDB00] shadow-[0px_4px_4px_rgba(0,0,0,0.25)]" />
+                    </Text>
+                  </div>
+                  <IconSharpRight className="absolute -right-20pxr top-5pxr" />
+                  <div className="absolute -top-5pxr -right-100pxr flex items-center justify-center bg-white rounded-full w-72pxr h-72pxr">
+                    <Text fontSize={32} fontWeight={800}>
+                      나
+                    </Text>
+                  </div>
+                </div>
+              ))}
+              <div className="h-50pxr" />
+            </div>
+            <div className="absolute right-0 bottom-0 cursor-pointer bg-[#FFF4DC] rounded-r-10pxr">
               <IconRightPage />
             </div>
             <div
               className={`absolute right-50pxr bottom-36pxr flex flex-col items-start cursor-pointer`}
-              onClick={() => setRecordStart(true)}
+              onClick={handleRecordStart}
             >
               <Text fontSize={16} fontWeight={400} color="636366">
                 다음

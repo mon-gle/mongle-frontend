@@ -24,9 +24,15 @@ export default {
           '0%': { transform: 'rotate(0deg)' },
           '100%': { transform: 'rotate(360deg)' },
         },
+        'scale-pulse': {
+          '0%': { transform: 'scale(2)', opacity: 1 },
+          '50%': { transform: 'scale(2.5)', opacity: 0.5 },
+          '100%': { transform: 'scale(2)', opacity: 0 },
+        },
       },
       animation: {
         spin: 'spin 1s linear infinite',
+        'scale-pulse': 'scale-pulse 2s infinite ease-in-out',
       },
     },
   },
