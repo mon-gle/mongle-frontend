@@ -8,3 +8,4 @@ export { ReactComponent as IconText } from './icon_text.svg';
 export { ReactComponent as IconFeather } from './icon_feather.svg';
 export { ReactComponent as IconMongleBook } from './icon_mongle_book.svg';
 export { ReactComponent as IconPlus } from './icon_plus.svg';
+export { ReactComponent as IconUp } from './icon_up.svg';

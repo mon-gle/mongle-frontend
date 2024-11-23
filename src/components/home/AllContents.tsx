@@ -1,11 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Text } from '../common/Text';
 import ImageBookSample from '@/assets/images/image_book_sample.png';
+import { IconUp } from '@/assets/icons';
 
 export default function AllContents() {
   const [selected, setSelected] = useState('인기순');
+  const [showButton, setShowButton] = useState(false); // "맨 위로" 버튼 표시 여부
 
   const options = ['인기순', '날짜순', '가나다순'];
+
+  // 스크롤 이벤트 감지
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 200) {
+        setShowButton(true);
+      } else {
+        setShowButton(false);
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+    };
+  }, []);
+
+  // "맨 위로" 스크롤 함수
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  };
 
   return (
     <main
@@ -56,6 +79,21 @@ export default function AllContents() {
         ))}
       </section>
       <div className="h-20pxr" />
+
+      {/* 맨 위로 버튼 */}
+      {showButton && (
+        <button
+          className="fixed bottom-50pxr right-104pxr w-50pxr h-50pxr rounded-full bg-white flex items-center justify-center 
+               shadow-lg cursor-pointer
+               fill-white filter-[drop-shadow(0px_2px_20px_rgba(0,0,0,0.70))]"
+          onClick={scrollToTop}
+          style={{
+            fill: '#FFF',
+          }}
+        >
+          <IconUp />
+        </button>
+      )}
     </main>
   );
 }
