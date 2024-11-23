@@ -108,7 +108,7 @@ export default function Home() {
           <img src={ImageMongle} alt="몽글캐릭터" />
         </section>
       </section>
-      <div className="h-52pxr" />
+      <div className="h-32pxr" />
       {/**
        * 콘텐츠
        */}
