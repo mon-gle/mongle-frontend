@@ -10,3 +10,6 @@ export { ReactComponent as IconMongleBook } from './icon_mongle_book.svg';
 export { ReactComponent as IconPlus } from './icon_plus.svg';
 export { ReactComponent as IconUp } from './icon_up.svg';
 export { ReactComponent as IconHanger } from './icon_hanger.svg';
+export { ReactComponent as IconLeftBlue } from './icon_left_blue.svg';
+export { ReactComponent as IconBookBlack } from './icon_book_black.svg';
+export { ReactComponent as IconBrainYellow } from './icon_brain_yellow.svg';
