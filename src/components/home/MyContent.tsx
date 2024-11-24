@@ -1,14 +1,32 @@
 import { Text } from '../common/Text';
-import { ReadingStats } from './myContents/ReadingStats';
-import { EndingCard } from './myContents/EndingCard';
-import { AddCard } from './myContents/AddCard';
-import ImageBookSample from '@/assets/images/rabbit1.png';
-import ImageTutorial from '@/assets/images/image_tutorial.png';
-import { IconHanger } from '@/assets/icons';
 import { SearchCard } from './myContents/SearchCard';
 import BookCard from './myContents/BookCard';
+import { useEffect, useState } from 'react';
+import { ReadingStats } from './myContents/ReadingStats';
+import { IconHanger } from '@/assets/icons';
+import { EndingCard } from './myContents/EndingCard';
+import { AddCard } from './myContents/AddCard';
+import ImageTutorial from '@/assets/images/image_tutorial.png';
+import ImageBookSample from '@/assets/images/rabbit1.png';
 
 export default function MyContent() {
+  const images = import.meta.glob('@/assets/images/*', { eager: true });
+
+  const getImagePath = (filename: string): string => {
+    const key = `/src/assets/images/${filename}`;
+    return (images[key] as any)?.default || '';
+  };
+  const allStoriesData = JSON.parse(localStorage.getItem('storyData') || '[]');
+  const [randomBooks, setRandomBooks] = useState<any[]>([]);
+
+  // 랜덤 책 선택 함수
+  useEffect(() => {
+    if (allStoriesData.stories.length > 0) {
+      const shuffled = allStoriesData.stories.sort(() => 0.5 - Math.random());
+      setRandomBooks(shuffled.slice(0, 5)); // 첫 5개 요소 선택
+    }
+  }, []);
+
   return (
     <main className="px-64pxr flex flex-col overflow-y-scroll">
       <div className="h-50pxr" />
@@ -62,11 +80,12 @@ export default function MyContent() {
       </Text>
       <div className="h-12pxr" />
       <section className="flex gap-20pxr">
-        {Array.from({ length: 5 }).map((_, index) => (
+        {randomBooks.map((book, index) => (
           <BookCard
             key={index}
-            src={ImageBookSample}
-            title={`곰의 행복 ${index + 1}`}
+            src={getImagePath(book.thumbnail)} // 책 이미지가 있다면 사용, 없다면 기본 이미지 사용
+            title={book.title}
+            id={book.id}
           />
         ))}
         <SearchCard title="다른동화 둘러보기" />

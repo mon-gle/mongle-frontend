@@ -1,8 +1,21 @@
 import { Text } from '@/components/common/Text';
+import { useNavigate } from 'react-router-dom';
 
-export default function BookCard({ src, title }: { src: any; title: string }) {
+export default function BookCard({
+  src,
+  title,
+  id,
+}: {
+  src: any;
+  title: string;
+  id: string;
+}) {
+  const navigate = useNavigate();
   return (
-    <div className="flex flex-col gap-12pxr">
+    <div
+      className="flex flex-col gap-12pxr cursor-pointer"
+      onClick={() => navigate(`/detail/${id}`)}
+    >
       <img
         src={src}
         alt={title}

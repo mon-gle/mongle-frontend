@@ -12,13 +12,22 @@ export default function AllContents() {
     return (images[key] as any)?.default || '';
   };
   const allStoriesData = JSON.parse(localStorage.getItem('storyData') || '[]');
-  const allstories = allStoriesData.stories;
+
   const [selected, setSelected] = useState<string>('인기순');
   const [showButton, setShowButton] = useState<boolean>(false);
-
+  const [allstories, setAllStories] = useState(allStoriesData.stories || []);
+  const shuffleArray = (array: any[]) => {
+    for (let i = array.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [array[i], array[j]] = [array[j], array[i]]; // 구조 분해 할당을 사용하여 요소를 교환
+    }
+    return array;
+  };
   const options = ['인기순', '날짜순', '가나다순'];
 
   useEffect(() => {
+    const shuffledStories = shuffleArray([...allstories]); // allstories 배열을 복사하여 섞기
+    setAllStories(shuffledStories);
     const handleScroll = () => {
       if (window.scrollY > 200) {
         setShowButton(true);
@@ -42,7 +51,7 @@ export default function AllContents() {
     <main className="px-64pxr flex flex-col overflow-y-scroll">
       <div className="h-50pxr" />
       <Text fontSize={28} fontWeight={800} color="1C1C1E" className="px-4pxr">
-        모든책에서 200권의
+        모든책에서 {allstories.length}권의
         <br />
         책을 한번에 찾아볼 수 있어요!
       </Text>

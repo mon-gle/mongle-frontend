@@ -10,6 +10,7 @@ import {
   IconRightArrow,
   IconRightPage,
 } from '@/assets/icons';
+import useImageStore from '@/store/useImageStore';
 
 export default function Story() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function Story() {
   const storyData = allStories.stories.find(
     (story: { id: string }) => story.id == id
   );
+  const { addImage, getImage } = useImageStore();
   const fetchImage = async (title: string) => {
     const options = {
       method: 'POST',
@@ -96,70 +98,32 @@ export default function Story() {
     localStorage.setItem('storyData', JSON.stringify(allStories));
     navigate(-1);
   };
-  const updateImageInLocalStorage = (
-    id: string,
-    step: number,
-    imgSrc: string
-  ) => {
-    // 1. localStorage에서 데이터 가져오기
-    const allStories = JSON.parse(localStorage.getItem('storyData') || '{}');
-
-    if (!allStories || !allStories.stories) {
-      console.error('No stories data found in localStorage.');
-      return;
-    }
-
-    // 2. 특정 ID의 스토리 찾기
-    const storyIndex = allStories.stories.findIndex(
-      (story: { id: string }) => story.id === id
-    );
-
-    if (storyIndex === -1) {
-      console.error(`Story with id ${id} not found.`);
-      return;
-    }
-
-    // 3. 해당 스토리의 content에서 이미지 업데이트
-    const story = allStories.stories[storyIndex];
-    if (!story.content || !story.content[step - 1]) {
-      console.error(`Content for step ${step} not found in story ${id}.`);
-      return;
-    }
-
-    story.content[step - 1].imgSrc = imgSrc;
-
-    // 4. 업데이트된 스토리를 다시 localStorage에 저장
-    allStories.stories[storyIndex] = story;
-    localStorage.setItem('storyData', JSON.stringify(allStories));
-  };
 
   useEffect(() => {
     const loadInitialImage = async () => {
       setLoading(true);
-      const imgSrc = storyData.content[0]?.imgSrc;
-      console.log(storyData.content[0]);
+      const imgSrc = getImage(id!, 1);
       if (imgSrc) {
         setImages((prev) => ({ ...prev, 1: imgSrc }));
       } else {
         const firstTitle = storyData.content[0].title;
         const firstImage = await fetchImage(storyData.title + firstTitle);
         setImages((prev) => ({ ...prev, 1: firstImage }));
-        updateImageInLocalStorage(id!, 1, firstImage!);
+        addImage(id!, 1, firstImage!);
       }
       setLoading(false);
 
       const prefetchRemainingImages = async () => {
         for (let i = 1; i < storyData.content.length; i++) {
           const stepIndex = i + 1;
-          const imgSrc = storyData.content[i]?.imgSrc;
-          console.log(storyData.content[i]);
+          const imgSrc = getImage(id!, stepIndex);
           if (imgSrc) {
             setImages((prev) => ({ ...prev, [stepIndex]: imgSrc }));
           } else {
             const title = storyData.content[i].title;
             const image = await fetchImage(title);
             setImages((prev) => ({ ...prev, [stepIndex]: image }));
-            updateImageInLocalStorage(id!, stepIndex, image!);
+            addImage(id!, stepIndex, image!);
           }
         }
       };
