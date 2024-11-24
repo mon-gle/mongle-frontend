@@ -14,7 +14,7 @@ export default function Home() {
       {/**
        * 헤더
        */}
-      <section className="w-full mb-1pxr bg-white h-76pxr flex items-end justify-between px-64pxr fixed border-b-3pxr border-f4f4f4">
+      <section className="z-[999] w-full mb-1pxr bg-white h-76pxr flex items-end justify-between px-64pxr fixed border-b-3pxr border-f4f4f4">
         <div className="flex justify-center">
           {tabs.map((tab) => (
             <div
