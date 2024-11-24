@@ -37,8 +37,49 @@ export default function DiscussBook({
   const [transcript, setTranscript] = useState('');
   const [savedTranscripts, setSavedTranscripts] = useState<string[]>([]);
   const recognitionRef = useRef<SpeechRecognition | null>(null);
-  const [audioUrl, setAudioUrl] = useState('');
   const [timer, setTimer] = useState(80);
+  const timerRef = useRef<number | null>(null);
+  const [pausedTime, setPausedTime] = useState<number>(80);
+  const stopTimer = () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+      timerRef.current = null;
+      setPausedTime(timer);
+    }
+  };
+
+  const startTimer = () => {
+    setTimer(pausedTime);
+    timerRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev > 0) {
+          return prev - 1;
+        } else {
+          clearInterval(timerRef.current!);
+          handleNextStep();
+          return 0;
+        }
+      });
+    }, 1000);
+  };
+  useEffect(() => {
+    timerRef.current = setInterval(() => {
+      setTimer((prev) => {
+        if (prev > 0) {
+          return prev - 1;
+        } else {
+          clearInterval(timerRef.current!);
+          setUserAnswer(savedTranscripts);
+          handleNextStep();
+          return 0;
+        }
+      });
+    }, 1000);
+
+    return () => {
+      if (timerRef.current) clearInterval(timerRef.current);
+    };
+  }, [pausedTime]);
   useEffect(() => {
     // webkitSpeechRecognition을 window 객체에서 가져오도록 타입 선언
     const SpeechRecognition =
@@ -77,21 +118,6 @@ export default function DiscussBook({
       };
     }
   }, []);
-  useEffect(() => {
-    const interval = setInterval(() => {
-      setTimer((prev) => {
-        if (prev > 0) {
-          return prev - 1;
-        } else {
-          clearInterval(interval);
-          handleNextStep();
-          return 0;
-        }
-      });
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
   // 녹음 시작/중단
   const toggleRecording = () => {
     if (!recognitionRef.current) {
@@ -110,8 +136,7 @@ export default function DiscussBook({
     }
   };
   const handleRecordStart = () => {
-    handlePlayAudio();
-    if (savedTranscripts.length == 2) {
+    if (savedTranscripts.length === 2) {
       setUserAnswer(savedTranscripts);
       handleNextStep();
       return;
@@ -122,6 +147,7 @@ export default function DiscussBook({
     prompt: string
   ): Promise<string | void> => {
     setLoading(true);
+    stopTimer();
 
     const optionsForDiscussion = {
       method: 'POST',
@@ -143,14 +169,16 @@ export default function DiscussBook({
     };
 
     try {
-      // Fetch discussion content
       const discussionResponse = await fetch(
         `${import.meta.env.VITE_API_HELPY}`,
         optionsForDiscussion
       );
       const discussionResult = await discussionResponse.json();
       const discussionContent = discussionResult.choices[0].message.content;
-
+      const speech = new SpeechSynthesisUtterance(discussionContent);
+      window.speechSynthesis.speak(speech);
+      return discussionContent;
+      // Elice Speech API
       const audioResponse = await fetch(babyMP3);
       const audioBlob = await audioResponse.blob();
 
@@ -175,12 +203,13 @@ export default function DiscussBook({
       const audioBlobResponse = await response.blob();
 
       const audioUrl = URL.createObjectURL(audioBlobResponse);
-      setAudioUrl(audioUrl);
-      return discussionContent;
+      const audios = new Audio(audioUrl);
+      audios.play();
     } catch (error) {
       console.error('Error:', error);
     } finally {
       setLoading(false);
+      startTimer();
     }
   };
 
@@ -193,12 +222,6 @@ export default function DiscussBook({
     };
     getFirst();
   }, []);
-  const handlePlayAudio = () => {
-    const audio = new Audio(audioUrl);
-    audio.play().catch((error) => {
-      console.error('Playback failed:', error);
-    });
-  };
 
   useEffect(() => {
     if (savedTranscripts.length == 1) {
