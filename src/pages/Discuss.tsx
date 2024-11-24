@@ -13,6 +13,7 @@ import {
   IconReward,
   IconSharpRight,
 } from '@/assets/icons';
+import useUuidStore from '@/store/useUuidStore';
 
 export default function Discuss() {
   const navigate = useNavigate();
@@ -22,6 +23,7 @@ export default function Discuss() {
   const [userSelect, setUserSelect] = useState<string>('');
   const [userAnswer, setUserAnswer] = useState<string[]>([]);
   const [userFeedBack, serUserFeedBack] = useState<string>('');
+  const { uuid, setUUID } = useUuidStore();
   const handleNextStep = () => {
     setCurrentStep((prev) => Math.min(prev + 1, 6));
   };
@@ -41,8 +43,7 @@ export default function Discuss() {
   const storyData = allStories.stories.find(
     (story: { id: string }) => story.id === id
   );
-  const sess_id = uuidv4();
-  const fetchDiscussion = async (prompt: string) => {
+  const fetchDiscussion = async (prompt: string, sId?: string) => {
     const options = {
       method: 'POST',
       headers: {
@@ -52,7 +53,7 @@ export default function Discuss() {
       },
       body: JSON.stringify({
         model: 'helpy-pro',
-        sess_id,
+        sess_id: sId || uuid,
         messages: [
           {
             role: 'user',
@@ -78,9 +79,13 @@ export default function Discuss() {
     }
   };
   useEffect(() => {
+    const sess_id = uuidv4();
+    setUUID(sess_id);
+    console.log(sess_id);
     const getFirst = async () => {
       const firstResponse = await fetchDiscussion(
-        `${storyData.title} 동화책을 기반으로 찬성/반대 토론을 진행하고자해. 6세가 이해할 수 있게 주제 정해줘. 질문 주제에 대해 O,X로 결과가 꼭 나뉘어야해. 주제의 키는 subject, 찬성의 키는 pros, 반대의 키는 cons로 해서 무조건 json만 반환해줘. 말투는 어린애에게 하는 말투로 해줘 의견은 한 문장으로 조리있게 해줘`
+        `${storyData.title} 동화책을 기반으로 찬성/반대 토론을 진행하고자해. 6세가 이해할 수 있게 주제 정해줘. 질문 주제에 대해 O,X로 결과가 꼭 나뉘어야해. 주제의 키는 subject, 찬성의 키는 pros, 반대의 키는 cons로 해서 무조건 json만 반환해줘. 말투는 어린애에게 하는 말투로 해줘 의견은 한 문장으로 조리있게 해줘`,
+        sess_id
       );
       setDiscussionData(firstResponse);
     };
@@ -89,11 +94,13 @@ export default function Discuss() {
 
   useEffect(() => {
     const getUserFinal = async () => {
+      if (userAnswer.length === 0) return;
       const response = await fetchDiscussion(
         `앞선 토론에 대해서 친구가 말한 내용에 대해 칭찬해줘. 논리, 설득력, 어휘 등 구체적으로 칭찬해줘. 6세 아이가 이해할 수 있는 짧고 간결한 문장이면 좋아. 반말로 작성해줘, 50자 내외로`
       );
       serUserFeedBack(response);
     };
+
     getUserFinal();
   }, [userAnswer]);
   const handleSelect = async (selectOption: string) => {
@@ -147,7 +154,6 @@ export default function Discuss() {
           <DiscussBook
             userSelect={userSelect}
             title={storyData.title}
-            sess_id={sess_id}
             handleNextStep={handleNextStep}
             handlePreviousStep={handlePreviousStep}
             setUserAnswer={setUserAnswer}

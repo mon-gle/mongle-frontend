@@ -13,11 +13,11 @@ import {
 import { useEffect, useRef, useState } from 'react';
 import { Text } from '../common/Text';
 import babyMP3 from '@/assets/audio/baby.mp3';
+import useUuidStore from '@/store/useUuidStore';
 
 interface DiscussBookProps {
   userSelect: string;
   title: string;
-  sess_id: string;
   handleNextStep: () => void;
   handlePreviousStep: () => void;
   setUserAnswer: (s: string[]) => void;
@@ -25,7 +25,6 @@ interface DiscussBookProps {
 export default function DiscussBook({
   userSelect,
   title,
-  sess_id,
   handleNextStep,
   handlePreviousStep,
   setUserAnswer,
@@ -40,6 +39,7 @@ export default function DiscussBook({
   const [timer, setTimer] = useState(80);
   const timerRef = useRef<number | null>(null);
   const [pausedTime, setPausedTime] = useState<number>(80);
+  const { uuid } = useUuidStore();
   const stopTimer = () => {
     if (timerRef.current) {
       clearInterval(timerRef.current);
@@ -158,7 +158,7 @@ export default function DiscussBook({
       },
       body: JSON.stringify({
         model: 'helpy-pro',
-        sess_id: sess_id,
+        sess_id: uuid,
         messages: [
           {
             role: 'user',
