@@ -4,8 +4,22 @@ import Home from './pages/Home';
 import Detail from './pages/Detail';
 import Story from './pages/Story';
 import Discuss from './pages/Discuss';
+import { useEffect } from 'react';
 
 function App() {
+  useEffect(() => {
+    const handleBeforeUnload = (event: any) => {
+      event.preventDefault();
+      event.returnValue = '지금 벗어나시면 토론이 초기화됩니다!';
+      return '';
+    };
+
+    window.addEventListener('beforeunload', handleBeforeUnload);
+
+    return () => {
+      window.removeEventListener('beforeunload', handleBeforeUnload);
+    };
+  }, []);
   return (
     <Router>
       <Routes>
