@@ -113,10 +113,21 @@ export default function Discuss() {
           />
         ))}
       </section>
-      {loading && (currentStep === 2 || currentStep === 5) && (
+      {loading && currentStep === 2 && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
           <div className="text-center">
-            <p className="text-white text-xl font-bold">Loading...</p>
+            <p className="text-white text-xl font-bold">
+              토론 주제를 불러오는 중...
+            </p>
+          </div>
+        </div>
+      )}
+      {loading && currentStep === 5 && (
+        <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-[999]">
+          <div className="text-center">
+            <p className="text-white text-xl font-bold">
+              토론 요약을 불러오는 중...
+            </p>
           </div>
         </div>
       )}

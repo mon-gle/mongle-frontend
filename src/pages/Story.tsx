@@ -139,7 +139,7 @@ export default function Story() {
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="text-center">
             <Text fontSize={24} fontWeight={800} color="white">
-              Loading...
+              이미지 불러오는 중...
             </Text>
           </div>
         </div>

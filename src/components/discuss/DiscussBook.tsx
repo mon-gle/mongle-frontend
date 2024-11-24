@@ -240,7 +240,9 @@ export default function DiscussBook({
       {loading && (
         <div className="absolute inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50">
           <div className="text-center">
-            <p className="text-white text-xl font-bold">Loading...</p>
+            <p className="text-white text-xl font-bold">
+              토론 내용을 준비하는 중...
+            </p>
           </div>
         </div>
       )}
