@@ -96,7 +96,7 @@ export default function Discuss() {
     const getUserFinal = async () => {
       if (userAnswer.length === 0) return;
       const response = await fetchDiscussion(
-        `앞선 토론에 대해서 친구가 말한 내용에 대해 칭찬해줘. 논리, 설득력, 어휘 등 구체적으로 칭찬해줘. 6세 아이가 이해할 수 있는 짧고 간결한 문장이면 좋아. 반말로 작성해줘, 50자 내외로`
+        `앞선 토론에 대해서 친구가 말한 내용에 대해 칭찬해줘. 논리, 설득력, 어휘 등 구체적으로 칭찬해줘. 6세 아이가 이해할 수 있는 짧고 간결한 문장이면 좋아.  반말로 1줄로 작성해줘, 아쉬운점 혹은 피드백 1줄을 더해도 좋아`
       );
       serUserFeedBack(response);
     };
