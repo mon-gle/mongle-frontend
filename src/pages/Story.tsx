@@ -63,6 +63,25 @@ export default function Story() {
     }
   };
 
+  const [touchStartX, setTouchStartX] = useState(0);
+  const [touchEndX, setTouchEndX] = useState(0);
+  const handleTouchStart = (e: any) => {
+    setTouchStartX(e.targetTouches[0].clientX); // 터치 시작 위치 저장
+  };
+
+  const handleTouchMove = (e: any) => {
+    setTouchEndX(e.targetTouches[0].clientX); // 터치 이동 중 위치 갱신
+  };
+
+  const handleTouchEnd = (direction: string) => {
+    // 오른쪽으로 50px 이상 스와이프 했는지 확인
+    if (touchStartX < touchEndX - 50 && direction === 'right') {
+      handlePreviousStep(); // 이전 단계 함수 호출
+    } else if (touchStartX > touchEndX + 50 && direction === 'left') {
+      handleNextStep(); // 다음 단계 함수 호출
+    }
+  };
+
   const handlePreviousStep = () => {
     setCurrentStep((prev) => Math.max(prev - 1, 1));
   };
@@ -198,6 +217,9 @@ export default function Story() {
               linear-gradient(90deg, rgba(0, 0, 0, 0.00) 85.45%, rgba(0, 0, 0, 0.15) 100%), 
               #FFF4DC`,
             }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={() => handleTouchEnd('right')}
           >
             {images[currentStep] ? (
               <img
@@ -239,6 +261,9 @@ export default function Story() {
               linear-gradient(270deg, rgba(0, 0, 0, 0.00) 85.45%, rgba(0, 0, 0, 0.15) 100%), 
               #FFF4DC`,
             }}
+            onTouchStart={handleTouchStart}
+            onTouchMove={handleTouchMove}
+            onTouchEnd={() => handleTouchEnd('left')}
           >
             <div className="h-56pxr" />
             <Text
